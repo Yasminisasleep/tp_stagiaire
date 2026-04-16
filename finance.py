@@ -1,25 +1,30 @@
-import random
+import yfinance as yf
 
 
 def obtenir_cours_action(symbole):
-    cours_simules = {
-        "AAPL": 178.50,
-        "GOOGL": 141.80,
-        "MSFT": 378.90,
-        "TSLA": 248.50,
-        "AMZN": 182.30,
-    }
-
     symbole = symbole.upper().strip()
-    if symbole in cours_simules:
-        cours = cours_simules[symbole]
-        variation = round(random.uniform(-3, 3), 2)
+    try:
+        ticker = yf.Ticker(symbole)
+        data = ticker.history(period="2d")
+        if data.empty:
+            return f"Symbole '{symbole}' non trouve ou pas de donnees."
+
+        cours_actuel = data["Close"].iloc[-1]
+        if len(data) >= 2:
+            cours_veille = data["Close"].iloc[-2]
+            variation = ((cours_actuel - cours_veille) / cours_veille) * 100
+        else:
+            variation = 0.0
+        volume = data["Volume"].iloc[-1]
+
         return (
             f"Action : {symbole}\n"
-            f"Cours actuel : {cours}$\n"
-            f"Variation du jour : {variation:+.2f}%"
+            f"Cours actuel : {cours_actuel:.2f}$\n"
+            f"Variation du jour : {variation:+.2f}%\n"
+            f"Volume : {int(volume)}"
         )
-    return f"Symbole '{symbole}' non trouve."
+    except Exception as e:
+        return f"Erreur lors de la recuperation du cours de {symbole} : {e}"
 
 
 def calculer_interet(montant, taux, duree):
