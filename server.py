@@ -5,9 +5,9 @@ from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, String, Float, Integer, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from langchain_openai import ChatOpenAI
-from langchain.agents import AgentExecutor, create_react_agent
-from langchain.tools import Tool
-from langchain.prompts import PromptTemplate
+from langchain_classic.agents import AgentExecutor, create_react_agent
+from langchain_classic.tools import Tool
+from langchain_classic.prompts import PromptTemplate
 
 load_dotenv()
 

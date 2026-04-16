@@ -1,11 +1,11 @@
 import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from langchain.agents import AgentExecutor, create_react_agent, create_openai_tools_agent
-from langchain.tools import Tool
-from langchain.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
-from langchain.memory import ConversationBufferMemory
-from langchain_community.tools import TavilySearchResults
+from langchain_classic.agents import AgentExecutor, create_react_agent, create_openai_tools_agent
+from langchain_classic.tools import Tool
+from langchain_classic.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
+from langchain_classic.memory import ConversationBufferMemory
+from langchain_tavily import TavilySearch
 from langchain_experimental.tools import PythonREPLTool
 from database import rechercher_client, rechercher_produit
 from finance import obtenir_cours_action, calculer_interet, convertir_devise
@@ -41,7 +41,7 @@ tools = [
     ),
 ]
 
-tavily_tool = TavilySearchResults(
+tavily_tool = TavilySearch(
     max_results=3,
     description="Recherche sur le web des informations financieres, actualites, resultats d'entreprises. Entree : question ou mots-cles."
 )
