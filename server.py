@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, String, Float, Integer, text
 from sqlalchemy.orm import declarative_base, sessionmaker
-from langchain_anthropic import ChatAnthropic
+from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain.tools import Tool
 from langchain.prompts import PromptTemplate
@@ -98,10 +98,10 @@ api_prompt = PromptTemplate(
 
 
 def creer_api_agent():
-    llm = ChatAnthropic(
-        model="claude-sonnet-4-20250514",
+    llm = ChatOpenAI(
+        model="gpt-4o-mini",
         temperature=0,
-        anthropic_api_key=os.getenv("ANTHROPIC_API_KEY")
+        openai_api_key=os.getenv("OPENAI_API_KEY")
     )
     agent = create_react_agent(llm=llm, tools=api_tools, prompt=api_prompt)
     return AgentExecutor(
