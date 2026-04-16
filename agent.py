@@ -4,6 +4,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain.tools import Tool
 from langchain.prompts import PromptTemplate
+from langchain_community.tools import TavilySearchResults
 from database import rechercher_client, rechercher_produit
 from finance import obtenir_cours_action, calculer_interet, convertir_devise
 
@@ -33,9 +34,15 @@ tools = [
     Tool(
         name="convertir_devise",
         func=lambda x: convertir_devise(*x.split(",")),
-        description="Convertit un montant entre devises. Entrée : montant,devise_source,devise_cible (séparés par des virgules)."
+        description="Convertit un montant entre devises. Entree : montant,devise_source,devise_cible (separes par des virgules)."
     ),
 ]
+
+tavily_tool = TavilySearchResults(
+    max_results=3,
+    description="Recherche sur le web des informations financieres, actualites, resultats d'entreprises. Entree : question ou mots-cles."
+)
+tools.append(tavily_tool)
 
 PROMPT_TEMPLATE = """Tu es un assistant financier intelligent. Tu aides les utilisateurs avec leurs questions bancaires et financières.
 
