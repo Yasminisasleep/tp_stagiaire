@@ -5,6 +5,7 @@ from langchain.agents import AgentExecutor, create_react_agent
 from langchain.tools import Tool
 from langchain.prompts import PromptTemplate
 from langchain_community.tools import TavilySearchResults
+from langchain_experimental.tools import PythonREPLTool
 from database import rechercher_client, rechercher_produit
 from finance import obtenir_cours_action, calculer_interet, convertir_devise
 from tools.portefeuille import calculer_portefeuille
@@ -50,6 +51,16 @@ tools.append(Tool(
     func=calculer_portefeuille,
     description="Calcule la valeur totale d'un portefeuille d'actions. Entree : liste au format SYMBOLE:QUANTITE separes par | (ex: AAPL:10|GOOGL:5|MSFT:3)."
 ))
+
+# ATTENTION SECURITE : cet outil execute du code arbitraire.
+# Ne jamais utiliser en production sans sandbox.
+python_repl = PythonREPLTool()
+python_repl.description = (
+    "Execute du code Python pour des calculs complexes ou traitements "
+    "de donnees non couverts par les autres outils. "
+    "Entree : code Python valide sous forme de chaine."
+)
+tools.append(python_repl)
 
 PROMPT_TEMPLATE = """Tu es un assistant financier intelligent. Tu aides les utilisateurs avec leurs questions bancaires et financières.
 
