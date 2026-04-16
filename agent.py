@@ -7,6 +7,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.tools import TavilySearchResults
 from database import rechercher_client, rechercher_produit
 from finance import obtenir_cours_action, calculer_interet, convertir_devise
+from tools.portefeuille import calculer_portefeuille
 
 load_dotenv()
 
@@ -43,6 +44,12 @@ tavily_tool = TavilySearchResults(
     description="Recherche sur le web des informations financieres, actualites, resultats d'entreprises. Entree : question ou mots-cles."
 )
 tools.append(tavily_tool)
+
+tools.append(Tool(
+    name="calculer_portefeuille",
+    func=calculer_portefeuille,
+    description="Calcule la valeur totale d'un portefeuille d'actions. Entree : liste au format SYMBOLE:QUANTITE separes par | (ex: AAPL:10|GOOGL:5|MSFT:3)."
+))
 
 PROMPT_TEMPLATE = """Tu es un assistant financier intelligent. Tu aides les utilisateurs avec leurs questions bancaires et financières.
 
